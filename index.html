@@ -30,101 +30,82 @@
         body { font-family: var(--font-family); margin: 0; padding: 0; background-color: var(--bg-body); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
 
-        header { background-color: var(--bg-surface); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 10; }
-        header h1 { margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
+        header { background-color: var(--bg-surface); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 10; flex-wrap: wrap; gap: 10px; }
+        header h1 { margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
         
-        .header-actions { display: flex; gap: 10px; align-items: center; }
-        .action-btn { background-color: white; color: var(--text-main); border: 1px solid var(--border); padding: 8px 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 0.875rem; transition: all 0.2s; }
-        .action-btn:hover { background-color: #f8fafc; border-color: var(--primary); color: var(--primary); }
-        .reset-btn { background-color: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 8px 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 0.875rem; transition: all 0.2s; }
-        .reset-btn:hover { background-color: var(--danger); color: white; }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
+        .action-btn, .reset-btn { padding: 6px 12px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.2s; white-space: nowrap; }
+        .action-btn { background-color: white; color: var(--text-main); border: 1px solid var(--border); }
+        .reset-btn { background-color: transparent; color: var(--danger); border: 1px solid var(--danger); }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--bg-surface); padding: 32px; border-radius: var(--radius-lg); width: 100%; max-width: 420px; box-shadow: var(--shadow-lg); }
-        .modal-content h2 { margin-top: 0; margin-bottom: 24px; font-size: 1.5rem; text-align: center; }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 0.95rem; font-family: inherit; background-color: #f9fafb; }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); background-color: white; }
-        
-        .radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .radio-label input { display: none; }
-        .radio-label span {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-md);
-            cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
-            background-color: white; transition: all 0.2s;
-        }
-        .radio-label input:checked + span {
-            border-color: var(--primary); background-color: #eff6ff; color: var(--primary);
-        }
-
-        .primary-btn { background-color: var(--primary); color: white; padding: 12px 20px; border: none; border-radius: var(--radius-md); cursor: pointer; width: 100%; font-size: 1rem; font-weight: 600; transition: background-color 0.2s; }
-        .primary-btn:hover { background-color: var(--primary-hover); }
-
+        /* 📱 반응형 메인 레이아웃 */
         .main-container { display: grid; grid-template-columns: 320px 1fr; flex: 1; overflow: hidden; }
-        .left-panel { background: var(--bg-surface); padding: 24px; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; z-index: 5; }
-        .left-panel h3 { margin-top: 0; font-size: 1.1rem; color: var(--text-main); margin-bottom: 20px; }
-        
-        #unassigned-list { flex: 1; overflow-y: auto; margin-top: 24px; background: #f8fafc; padding: 16px; border-radius: var(--radius-md); border: 2px dashed var(--border); min-height: 200px; display: flex; flex-direction: column; gap: 10px; }
-        #unassigned-list h4 { margin: 0 0 10px 0; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; text-align: center; }
-        
-        .right-panel { padding: 24px; overflow-x: auto; overflow-y: auto; }
-        .timetable-wrapper { display: flex; gap: 20px; min-width: max-content; padding-bottom: 20px; background-color: var(--bg-body); }
-        .day-column { background: var(--bg-surface); width: 280px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; flex-shrink: 0; border: 1px solid var(--border); }
-        .day-header { background: var(--bg-surface); color: var(--text-main); text-align: center; padding: 16px; font-weight: 700; font-size: 1rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2; }
-        
-        .time-slot { 
-            height: 72px; max-height: 72px; border-bottom: 1px solid #e1e9ee; 
-            padding: 4px 8px 4px 60px; box-sizing: border-box; display: block; 
-            position: relative; overflow: visible; 
-        }
-        .time-slot:last-child { border-bottom: none; }
-        .time-slot::after { content: ''; position: absolute; top: 50%; left: 60px; right: 0; border-top: 1px dashed #e2e8f0; pointer-events: none; z-index: 0; }
-        .time-label { position: absolute; top: 8px; left: 12px; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); pointer-events: none; }
-        
-        .activity-item { 
-            background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); 
-            padding: 6px 8px; cursor: grab; box-shadow: var(--shadow-sm); 
-            position: relative; transition: box-shadow 0.1s; 
-            display: flex; flex-direction: column; gap: 4px;
-        }
-        .activity-item:active { cursor: grabbing; box-shadow: var(--shadow-md); z-index: 30 !important; }
-        
-        .time-slot .activity-item { position: absolute; left: 60px; right: 8px; margin: 0; min-height: 28px; overflow: hidden; z-index: 10; }
-        .time-slot .activity-item:hover { z-index: 20; } 
-        #unassigned-list .activity-item { height: auto !important; }
-        
-        .activity-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .activity-icons-left { display: flex; align-items: center; gap: 6px; }
-        .activity-body { width: 100%; overflow: hidden; display: flex; align-items: flex-start; flex: 1; }
-        
-        .activity-type { font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; }
-        .activity-title { font-weight: 600; color: var(--text-main); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-        .activity-link { font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; flex-shrink: 0; transition: transform 0.2s; cursor: pointer; }
-        .activity-link:hover { transform: scale(1.2); }
-        
-        .btn-group { display: flex; gap: 4px; z-index: 15; }
-        .icon-btn { font-size: 0.7rem; color: var(--text-muted); cursor: pointer; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; background: rgba(0,0,0,0.05); }
-        .icon-btn:hover { background-color: #e2e8f0; color: var(--primary); }
-        .icon-btn.delete:hover { background-color: var(--danger); color: white; }
 
-        .type-meal .activity-type { background-color: #ffedd5; color: #c2410c; }
-        .type-cafe .activity-type { background-color: #f3e8ff; color: #7e22ce; }
-        .type-activity .activity-type { background-color: #dcfce7; color: #15803d; }
-        .type-accommodation .activity-type { background-color: #ffe4e6; color: #be123c; }
-        .type-transport .activity-type { background-color: #e0f2fe; color: #0284c7; } 
-        .type-todo .activity-type { background-color: #fef08a; color: #854d0e; }
+        /* 모바일용 탭 버튼 (데스크톱에서는 숨김) */
+        .mobile-tabs { display: none; background: white; border-bottom: 1px solid var(--border); }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: none; font-weight: 600; color: var(--text-muted); cursor: pointer; }
+        .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+        .left-panel { background: var(--bg-surface); padding: 20px; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; z-index: 5; }
+        .right-panel { padding: 16px; overflow-x: auto; overflow-y: auto; background-color: var(--bg-body); }
         
-        .resizer { position: absolute; bottom: 0; left: 0; right: 0; height: 12px; cursor: ns-resize; z-index: 20; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 4px; }
-        .resizer::after { content: ''; width: 24px; height: 4px; background-color: #cbd5e1; border-radius: 2px; transition: background-color 0.2s; }
-        .resizer:hover::after { background-color: var(--primary); }
-        #unassigned-list .resizer { display: none; }
-        .drag-over { background-color: #eff6ff; border-radius: var(--radius-md); margin: 2px; border: 2px dashed var(--primary); }
+        .timetable-wrapper { display: flex; gap: 16px; min-width: max-content; padding-bottom: 10px; }
+        .day-column { background: var(--bg-surface); width: 280px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); flex-shrink: 0; border: 1px solid var(--border); display: flex; flex-direction: column; margin-bottom: 20px; }
+        .day-header { padding: 16px; font-weight: 700; text-align: center; border-bottom: 1px solid var(--border); }
+
+        /* 모달 스타일 */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .modal-content { background: white; padding: 24px; border-radius: var(--radius-lg); width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; font-weight: 600; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-md); }
+
+        .radio-group { display: flex; flex-wrap: wrap; gap: 6px; }
+        .radio-label input { display: none; }
+        .radio-label span { padding: 6px 10px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 0.8rem; cursor: pointer; display: inline-block; background: white; }
+        .radio-label input:checked + span { background: #eff6ff; border-color: var(--primary); color: var(--primary); }
+
+        .primary-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: var(--radius-md); width: 100%; cursor: pointer; font-weight: 600; }
+
+        /* 타임 슬롯 및 아이템 */
+        .time-slot { height: 72px; border-bottom: 1px solid #edf2f7; position: relative; padding-left: 60px; }
+        .time-label { position: absolute; left: 10px; top: 10px; font-size: 0.75rem; color: var(--text-muted); }
+        .activity-item { background: white; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 8px; box-shadow: var(--shadow-sm); cursor: grab; position: relative; }
+        .time-slot .activity-item { position: absolute; left: 60px; right: 10px; z-index: 10; }
+        
+        .activity-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .activity-title { font-weight: 600; font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .btn-group { display: flex; gap: 5px; }
+        .icon-btn { cursor: pointer; font-size: 0.7rem; opacity: 0.7; }
+        .resizer { position: absolute; bottom: 0; left: 0; right: 0; height: 8px; cursor: ns-resize; }
+
+        /* 배정 대기열 */
+        #unassigned-list { margin-top: 20px; padding: 15px; border: 2px dashed var(--border); border-radius: var(--radius-md); min-height: 150px; }
+        #unassigned-list .activity-item { margin-bottom: 8px; }
+
+        /* 📱 모바일 미디어 쿼리 */
+        @media (max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; }
+            header h1 { font-size: 1rem; width: 100%; text-align: center; }
+            .header-actions { width: 100%; justify-content: center; }
+            .mobile-tabs { display: flex; }
+            .left-panel.hidden, .right-panel.hidden { display: none; }
+            .left-panel { border-right: none; height: 100%; }
+            .timetable-wrapper { min-width: unset; width: 100%; flex-direction: column; }
+            .day-column { width: 100%; }
+            .time-slot { padding-left: 50px; }
+            .time-label { left: 5px; }
+        }
+
+        /* 일정 타입별 색상 */
+        .type-meal { border-left: 4px solid #f59e0b; }
+        .type-cafe { border-left: 4px solid #8b5cf6; }
+        .type-activity { border-left: 4px solid #10b981; }
+        .type-transport { border-left: 4px solid #3b82f6; }
+        .type-accommodation { border-left: 4px solid #ef4444; }
+        .type-todo { border-left: 4px solid #6b7280; }
     </style>
 </head>
 <body>
@@ -134,70 +115,22 @@
         <div class="header-actions">
             <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
             <button class="action-btn" onclick="document.getElementById('importFile').click()">📂 불러오기</button>
-            <button class="action-btn" onclick="openExportModal()">공유 / 내보내기</button>
-            <button class="reset-btn" onclick="resetPlanner()">새 여행 시작</button>
+            <button class="action-btn" onclick="openExportModal()">📤 내보내기</button>
+            <button class="reset-btn" onclick="resetPlanner()">🔄 리셋</button>
         </div>
     </header>
 
-    <div id="tripModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <h2>여행 기본 정보</h2>
-            <div class="form-group"><label>어디로 떠나시나요?</label><input type="text" id="tripDest" placeholder="예: 제주도, 파리"></div>
-            <div class="form-group"><label>시작 날짜</label><input type="date" id="tripStart"></div>
-            <div class="form-group"><label>종료 날짜</label><input type="date" id="tripEnd"></div>
-            <button class="primary-btn" onclick="startTrip()">새 플래너 시작하기</button>
-
-            <div style="display: flex; align-items: center; margin: 24px 0 16px 0;">
-                <div style="flex: 1; height: 1px; background-color: var(--border);"></div>
-                <span style="padding: 0 12px; color: var(--text-muted); font-size: 0.85rem;">또는</span>
-                <div style="flex: 1; height: 1px; background-color: var(--border);"></div>
-            </div>
-
-            <button class="action-btn" style="width: 100%; display: flex; justify-content: center; gap: 8px;" onclick="document.getElementById('importFile').click()">
-                📂 기존 플래너 파일(.json) 불러오기
-            </button>
-        </div>
-    </div>
-
-    <div id="editModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <h2>일정 수정</h2>
-            <div class="form-group">
-                <label>분류</label>
-                <div class="radio-group" id="editActTypeGroup">
-                    <label class="radio-label"><input type="radio" name="editActType" value="meal"><span>식사 🍔</span></label>
-                    <label class="radio-label"><input type="radio" name="editActType" value="cafe"><span>카페 ☕</span></label>
-                    <label class="radio-label"><input type="radio" name="editActType" value="activity"><span>액티비티 🎢</span></label>
-                    <label class="radio-label"><input type="radio" name="editActType" value="transport"><span>이동 🚌</span></label>
-                    <label class="radio-label"><input type="radio" name="editActType" value="accommodation"><span>숙소 🛌</span></label>
-                    <label class="radio-label"><input type="radio" name="editActType" value="todo"><span>할일 📝</span></label>
-                </div>
-            </div>
-            <div class="form-group"><label>일정 이름 (카드에 표시됨)</label><input type="text" id="editActTitle"></div>
-            <div class="form-group"><label>장소 이름 (선택/동선용)</label><input type="text" id="editActMapName" placeholder="예: 스타벅스 강남역점"></div>
-            <div class="form-group"><label>구글 지도 URL (선택)</label><input type="text" id="editActUrl" placeholder="https://..."></div>
-            <button class="primary-btn" onclick="saveEditActivity()">수정 완료</button>
-            <button class="reset-btn" style="width: 100%; border: none; margin-top: 8px; color: var(--text-muted);" onclick="closeEditModal()">취소</button>
-        </div>
-    </div>
-
-    <div id="exportModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content" style="max-width: 340px; text-align: center;">
-            <h2 style="margin-bottom: 10px;">내보내기 옵션</h2>
-            <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 0.9rem;">원하시는 저장 방식을 선택해주세요.</p>
-            <button class="primary-btn" style="margin-bottom: 12px; background-color: #4f46e5;" onclick="exportJson()">📁 데이터 파일 (JSON) 저장</button>
-            <button class="primary-btn" style="margin-bottom: 12px; background-color: #f59e0b;" onclick="exportMarkdown()">📝 마크다운 문서 (MD) 저장</button>
-            <button class="primary-btn" style="margin-bottom: 16px; background-color: #10b981;" onclick="exportImage()">📸 타임테이블 이미지 (JPG) 저장</button>
-            <button class="reset-btn" style="width: 100%; border: none; color: var(--text-muted);" onclick="closeExportModal()">취소</button>
-        </div>
+    <div class="mobile-tabs">
+        <button class="tab-btn active" id="tab-input-btn" onclick="switchTab('input')">일정 만들기</button>
+        <button class="tab-btn" id="tab-view-btn" onclick="switchTab('view')">타임테이블</button>
     </div>
 
     <div class="main-container">
-        <div class="left-panel">
+        <div class="left-panel" id="panel-input">
             <h3>새로운 일정 만들기</h3>
             <div class="form-group">
                 <label>분류</label>
-                <div class="radio-group" id="actTypeGroup">
+                <div class="radio-group">
                     <label class="radio-label"><input type="radio" name="actType" value="meal" checked><span>식사 🍔</span></label>
                     <label class="radio-label"><input type="radio" name="actType" value="cafe"><span>카페 ☕</span></label>
                     <label class="radio-label"><input type="radio" name="actType" value="activity"><span>액티비티 🎢</span></label>
@@ -206,48 +139,86 @@
                     <label class="radio-label"><input type="radio" name="actType" value="todo"><span>할일 📝</span></label>
                 </div>
             </div>
-            
-            <div class="form-group"><label>일정 이름</label><input type="text" id="actTitle" placeholder="예: 커피 타임"></div>
-            <div class="form-group"><label>장소 이름 (선택/동선용)</label><input type="text" id="actMapName" placeholder="예: 스타벅스 강남역점"></div>
-            <div class="form-group"><label>구글 지도 URL (선택)</label><input type="text" id="actUrl" placeholder="https://..."></div>
+            <div class="form-group"><input type="text" id="actTitle" placeholder="일정 이름 (예: 커피 타임)"></div>
+            <div class="form-group"><input type="text" id="actMapName" placeholder="장소 이름 (선택)"></div>
+            <div class="form-group"><input type="text" id="actUrl" placeholder="구글 지도 URL (선택)"></div>
             <button class="primary-btn" onclick="addActivity()">일정 생성</button>
 
             <div id="unassigned-list" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <h4>배치 대기열 (이곳에 드롭하여 되돌리기)</h4>
+                <h4 style="margin:0 0 10px 0; font-size: 0.8rem; color: var(--text-muted);">배치 대기열 (드래그하여 이동)</h4>
             </div>
         </div>
 
-        <div class="right-panel"><div id="timetable" class="timetable-wrapper"></div></div>
+        <div class="right-panel hidden" id="panel-view">
+            <div id="timetable" class="timetable-wrapper"></div>
+        </div>
+    </div>
+
+    <div id="tripModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h2 style="margin-top:0; text-align:center;">여행 정보 입력</h2>
+            <div class="form-group"><label>여행지</label><input type="text" id="tripDest" placeholder="예: 제주도"></div>
+            <div class="form-group"><label>시작일</label><input type="date" id="tripStart"></div>
+            <div class="form-group"><label>종료일</label><input type="date" id="tripEnd"></div>
+            <button class="primary-btn" onclick="startTrip()">플래너 시작</button>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="text-align: center;">
+            <h3>내보내기</h3>
+            <button class="primary-btn" style="margin-bottom:10px; background:#4f46e5;" onclick="exportJson()">JSON 파일 저장</button>
+            <button class="primary-btn" style="margin-bottom:10px; background:#10b981;" onclick="exportImage()">이미지로 저장</button>
+            <button class="action-btn" style="width:100%" onclick="closeExportModal()">닫기</button>
+        </div>
     </div>
 
     <script>
         let tripInfo = null;
         let activities = [];
-        let editingActId = null; 
 
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
-            if (!tripInfo) document.getElementById('tripModal').style.display = 'flex';
-            else initPlanner();
+            if (!tripInfo) {
+                document.getElementById('tripModal').style.display = 'flex';
+            } else {
+                initPlanner();
+            }
+            // 데스크톱 환경에서는 두 패널 모두 보이게 처리
+            if (window.innerWidth > 768) {
+                document.getElementById('panel-view').classList.remove('hidden');
+            }
         });
+
+        function switchTab(tab) {
+            const inputPanel = document.getElementById('panel-input');
+            const viewPanel = document.getElementById('panel-view');
+            const inputBtn = document.getElementById('tab-input-btn');
+            const viewBtn = document.getElementById('tab-view-btn');
+
+            if (tab === 'input') {
+                inputPanel.classList.remove('hidden');
+                viewPanel.classList.add('hidden');
+                inputBtn.classList.add('active');
+                viewBtn.classList.remove('active');
+            } else {
+                inputPanel.classList.add('hidden');
+                viewPanel.classList.remove('hidden');
+                inputBtn.classList.remove('active');
+                viewBtn.classList.add('active');
+            }
+        }
 
         function loadData() {
             tripInfo = JSON.parse(localStorage.getItem('tripInfo'));
             activities = JSON.parse(localStorage.getItem('activities')) || [];
         }
 
-        function resetPlanner() {
-            if(confirm('현재 일정을 지우고 새 여행을 시작하시겠습니까? (필요하다면 먼저 내보내기를 해주세요)')) {
-                localStorage.removeItem('tripInfo'); localStorage.removeItem('activities'); location.reload();
-            }
-        }
-
         function startTrip() {
             const dest = document.getElementById('tripDest').value;
             const start = document.getElementById('tripStart').value;
             const end = document.getElementById('tripEnd').value;
-            if (!dest || !start || !end) return alert('모든 정보를 입력해주세요!');
-            if (new Date(start) > new Date(end)) return alert('종료 날짜는 시작 날짜 이후여야 합니다.');
+            if (!dest || !start || !end) return alert('정보를 입력해주세요.');
             tripInfo = { dest, start, end };
             localStorage.setItem('tripInfo', JSON.stringify(tripInfo));
             document.getElementById('tripModal').style.display = 'none';
@@ -255,411 +226,151 @@
         }
 
         function initPlanner() {
-            document.getElementById('header-title').innerText = `✈️ ${tripInfo.dest} 여행 플래너 (${tripInfo.start} ~ ${tripInfo.end})`;
-            renderTimetable(); 
-            getDates(tripInfo.start, tripInfo.end).forEach(date => {
-                resolveOverlaps(date);
-            });
+            document.getElementById('header-title').innerText = `✈️ ${tripInfo.dest} (${tripInfo.start} ~ ${tripInfo.end})`;
+            renderTimetable();
             renderActivities();
-        }
-
-        function addActivity() {
-            const typeRadio = document.querySelector('input[name="actType"]:checked');
-            const type = typeRadio ? typeRadio.value : 'todo';
-            const title = document.getElementById('actTitle').value;
-            const mapName = document.getElementById('actMapName').value;
-            const url = document.getElementById('actUrl').value;
-            
-            if (!title) return alert('일정 이름을 입력해주세요.');
-
-            const newAct = { 
-                id: 'act-' + Date.now(), 
-                type, title, mapName, url, 
-                assignedDate: null, assignedHour: null, 
-                height: 64 
-            };
-            
-            activities.push(newAct);
-            localStorage.setItem('activities', JSON.stringify(activities));
-            
-            document.getElementById('actTitle').value = ''; 
-            document.getElementById('actMapName').value = ''; 
-            document.getElementById('actUrl').value = '';
-            
-            renderActivities();
-        }
-
-        function deleteActivity(id) {
-            activities = activities.filter(act => act.id !== id);
-            localStorage.setItem('activities', JSON.stringify(activities));
-            
-            const remaining = activities.filter(act => act.id !== id);
-            if(remaining.length > 0) {
-                const someDate = activities[0]?.assignedDate;
-                if(someDate) resolveOverlaps(someDate);
-            }
-            renderActivities();
-        }
-
-        function openEditModal(id) {
-            const act = activities.find(a => a.id === id);
-            if (!act) return;
-            
-            editingActId = id;
-            
-            document.querySelectorAll('input[name="editActType"]').forEach(radio => {
-                radio.checked = (radio.value === act.type);
-            });
-            
-            document.getElementById('editActTitle').value = act.title;
-            document.getElementById('editActMapName').value = act.mapName || '';
-            document.getElementById('editActUrl').value = act.url || '';
-            
-            document.getElementById('editModal').style.display = 'flex';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-            editingActId = null;
-        }
-
-        function saveEditActivity() {
-            if (!editingActId) return;
-            
-            const typeRadio = document.querySelector('input[name="editActType"]:checked');
-            const type = typeRadio ? typeRadio.value : 'todo';
-            const title = document.getElementById('editActTitle').value;
-            const mapName = document.getElementById('editActMapName').value;
-            const url = document.getElementById('editActUrl').value;
-            
-            if (!title) return alert('일정 이름을 입력해주세요.');
-            
-            const actIndex = activities.findIndex(a => a.id === editingActId);
-            if (actIndex > -1) {
-                activities[actIndex].type = type;
-                activities[actIndex].title = title;
-                activities[actIndex].mapName = mapName; 
-                activities[actIndex].url = url; 
-                localStorage.setItem('activities', JSON.stringify(activities));
-                renderActivities();
-            }
-            closeEditModal();
-        }
-
-        function getDates(startDate, endDate) {
-            const dates = []; let currentDate = new Date(startDate); const end = new Date(endDate);
-            while (currentDate <= end) { dates.push(currentDate.toISOString().split('T')[0]); currentDate.setDate(currentDate.getDate() + 1); }
-            return dates;
-        }
-
-        function getTypeName(type) {
-            const types = { 'meal': '식사 🍔', 'cafe': '카페 ☕', 'activity': '액티비티 🎢', 'transport': '이동 🚌', 'accommodation': '숙소 🛌', 'todo': '할일 📝' };
-            return types[type] || '일정';
-        }
-
-        function getTypeEmoji(type) {
-            const emojis = { 'meal': '🍔', 'cafe': '☕', 'activity': '🎢', 'transport': '🚌', 'accommodation': '🛌', 'todo': '📝' };
-            return emojis[type] || '📌';
         }
 
         function renderTimetable() {
-            const timetable = document.getElementById('timetable');
-            timetable.innerHTML = '';
-            
-            getDates(tripInfo.start, tripInfo.end).forEach((date, index) => {
-                const dayDiv = document.createElement('div'); dayDiv.className = 'day-column';
-                dayDiv.innerHTML = `<div class="day-header">
-                    <div style="margin-bottom: 8px;">Day ${index + 1} (${date})</div>
-                    <button data-html2canvas-ignore class="primary-btn" style="padding: 6px; font-size: 0.8rem; background-color: #10b981; border-radius: 4px;" onclick="openDailyRoute('${date}')">🗺️ 이 날의 동선 보기</button>
-                </div>`;
+            const container = document.getElementById('timetable');
+            container.innerHTML = '';
+            const dates = getDates(tripInfo.start, tripInfo.end);
 
-                for (let hour = 6; hour <= 24; hour++) {
+            dates.forEach((date, i) => {
+                const dayCol = document.createElement('div');
+                dayCol.className = 'day-column';
+                dayCol.innerHTML = `<div class="day-header">Day ${i+1} (${date})</div>`;
+                
+                for (let h = 6; h <= 24; h++) {
                     const slot = document.createElement('div');
-                    slot.className = 'time-slot'; slot.dataset.date = date; slot.dataset.hour = hour;
-                    slot.ondrop = drop; slot.ondragover = allowDrop;
-                    slot.ondragenter = handleDragEnter; slot.ondragleave = handleDragLeave;
-                    slot.innerHTML = `<span class="time-label">${hour < 10 ? '0'+hour : hour}:00</span>`;
-                    dayDiv.appendChild(slot);
+                    slot.className = 'time-slot';
+                    slot.dataset.date = date;
+                    slot.dataset.hour = h;
+                    slot.ondragover = allowDrop;
+                    slot.ondrop = drop;
+                    slot.innerHTML = `<span class="time-label">${h}:00</span>`;
+                    dayCol.appendChild(slot);
                 }
-                timetable.appendChild(dayDiv);
+                container.appendChild(dayCol);
             });
         }
 
-        function resolveOverlaps(date) {
-            const dailyActs = activities.filter(a => a.assignedDate === date && a.assignedHour !== null);
-            dailyActs.sort((a, b) => a.assignedHour - b.assignedHour);
+        function addActivity() {
+            const title = document.getElementById('actTitle').value;
+            if (!title) return alert('제목을 입력하세요.');
+            const type = document.querySelector('input[name="actType"]:checked').value;
             
-            let nextAvailableHour = 6.0;
+            const newAct = {
+                id: 'act-' + Date.now(),
+                title, type,
+                mapName: document.getElementById('actMapName').value,
+                url: document.getElementById('actUrl').value,
+                assignedDate: null, assignedHour: null, height: 60
+            };
 
-            dailyActs.forEach(act => {
-                if (act.assignedHour < nextAvailableHour) {
-                    act.assignedHour = nextAvailableHour;
-                }
-                
-                let h = act.height || 64;
-                let steps = Math.round((h - 64) / 36);
-                if (steps < -1) steps = -1; 
-                let duration = 1 + (steps * 0.5); 
-                
-                nextAvailableHour = act.assignedHour + duration;
-                
-                if (act.assignedHour > 24) {
-                    act.assignedDate = null;
-                    act.assignedHour = null;
-                }
-            });
-        }
-
-        function createActivityElement(act) {
-            const div = document.createElement('div');
-            div.className = `activity-item type-${act.type}`; div.id = act.id; div.draggable = true; div.ondragstart = drag;
-
-            let html = `
-                <div class="activity-header">
-                    <div class="activity-icons-left">
-                        <span class="activity-type">${getTypeEmoji(act.type)}</span>`;
+            activities.push(newAct);
+            save();
+            renderActivities();
             
-            if (act.url && act.url.trim() !== "") {
-                html += `<a data-html2canvas-ignore href="${act.url}" target="_blank" class="activity-link" title="지도에서 보기">🌎</a>`;
-            }
-            
-            html += `
-                    </div>
-                    <div data-html2canvas-ignore class="btn-group">
-                        <span class="icon-btn edit" onclick="openEditModal('${act.id}')">✏️</span>
-                        <span class="icon-btn delete" onclick="deleteActivity('${act.id}')">✕</span>
-                    </div>
-                </div>
-                <div class="activity-body">
-                    <span class="activity-title" title="${act.title}">${act.title}</span>
-                </div>
-                <div data-html2canvas-ignore class="resizer"></div>
-            `;
-            
-            div.innerHTML = html;
-
-            div.style.height = (act.height || 64) + 'px';
-
-            const resizer = div.querySelector('.resizer');
-            resizer.addEventListener('mousedown', function(e) {
-                e.preventDefault(); e.stopPropagation(); 
-                div.draggable = false; 
-
-                const startY = e.clientY;
-                const startHeight = parseInt(window.getComputedStyle(div).height);
-
-                function onMouseMove(moveEvent) {
-                    const newHeight = startHeight + (moveEvent.clientY - startY);
-                    div.style.height = newHeight + 'px';
-                }
-
-                function onMouseUp() {
-                    window.removeEventListener('mousemove', onMouseMove);
-                    window.removeEventListener('mouseup', onMouseUp);
-                    div.draggable = true; 
-
-                    if (div.parentElement && div.parentElement.classList.contains('time-slot')) {
-                        const currentHeight = parseInt(window.getComputedStyle(div).height);
-                        
-                        let extraSteps = Math.round((currentHeight - 64) / 36);
-                        if (extraSteps < -1) extraSteps = -1; 
-                        
-                        const snappedHeight = 64 + (extraSteps * 36);
-                        div.style.height = snappedHeight + 'px';
-
-                        if (act.height !== snappedHeight) {
-                            act.height = snappedHeight;
-                            const actIndex = activities.findIndex(a => a.id === act.id);
-                            if (actIndex > -1) {
-                                activities[actIndex].height = snappedHeight;
-                            }
-                        }
-                        
-                        resolveOverlaps(act.assignedDate);
-                        
-                        localStorage.setItem('activities', JSON.stringify(activities));
-                        renderActivities(); 
-                    }
-                }
-                window.addEventListener('mousemove', onMouseMove);
-                window.addEventListener('mouseup', onMouseUp);
-            });
-
-            return div;
+            document.getElementById('actTitle').value = '';
+            // 모바일이면 자동으로 타임테이블 탭으로 이동
+            if (window.innerWidth <= 768) switchTab('view');
         }
 
         function renderActivities() {
-            const unassignedList = document.getElementById('unassigned-list');
-            Array.from(unassignedList.children).forEach(child => { if (child.tagName !== 'H4') child.remove(); });
-            document.querySelectorAll('.time-slot .activity-item').forEach(el => el.remove());
+            document.querySelectorAll('.activity-item').forEach(el => el.remove());
+            const unassigned = document.getElementById('unassigned-list');
 
             activities.forEach(act => {
-                const el = createActivityElement(act);
-                if (act.assignedDate && act.assignedHour !== null) {
-                    let slotHour = Math.floor(act.assignedHour);
-                    let fraction = act.assignedHour - slotHour;
-
-                    const slot = document.querySelector(`.time-slot[data-date="${act.assignedDate}"][data-hour="${slotHour}"]`);
-                    if (slot) {
-                        el.style.top = (fraction * 72 + 4) + 'px';
-                        slot.appendChild(el);
-                    } else {
-                        unassignedList.appendChild(el);
-                    }
+                const el = createActivityEl(act);
+                if (act.assignedDate && act.assignedHour) {
+                    const slot = document.querySelector(`.time-slot[data-date="${act.assignedDate}"][data-hour="${act.assignedHour}"]`);
+                    if (slot) slot.appendChild(el);
+                    else unassigned.appendChild(el);
                 } else {
-                    unassignedList.appendChild(el);
+                    unassigned.appendChild(el);
                 }
             });
         }
 
-        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
-        function allowDrop(ev) { ev.preventDefault(); }
-        function handleDragEnter(ev) { ev.preventDefault(); if(ev.currentTarget.classList.contains('time-slot')) ev.currentTarget.classList.add('drag-over'); }
-        function handleDragLeave(ev) { if(ev.currentTarget.classList.contains('time-slot')) ev.currentTarget.classList.remove('drag-over'); }
-        function drop(ev) {
-            ev.preventDefault();
-            if(ev.currentTarget.classList.contains('time-slot')) ev.currentTarget.classList.remove('drag-over');
+        function createActivityEl(act) {
+            const div = document.createElement('div');
+            div.className = `activity-item type-${act.type}`;
+            div.id = act.id;
+            div.draggable = true;
+            div.ondragstart = (e) => e.dataTransfer.setData('text', act.id);
+            div.style.height = act.height + 'px';
+            div.innerHTML = `
+                <div class="activity-header">
+                    <span class="activity-title">${act.title}</span>
+                    <span class="icon-btn" onclick="deleteAct('${act.id}')">❌</span>
+                </div>
+                ${act.url ? `<a href="${act.url}" target="_blank" style="font-size:0.7rem; color:blue;">지도보기</a>` : ''}
+            `;
+            return div;
+        }
 
-            const dataId = ev.dataTransfer.getData("text");
-            const actIndex = activities.findIndex(a => a.id === dataId);
-            if (actIndex > -1) {
-                const dropTarget = ev.currentTarget;
-                if (dropTarget.classList.contains('time-slot')) {
-                    activities[actIndex].assignedDate = dropTarget.dataset.date;
-                    activities[actIndex].assignedHour = parseFloat(dropTarget.dataset.hour);
-                    
-                    resolveOverlaps(dropTarget.dataset.date);
-                } else if (dropTarget.id === 'unassigned-list') {
-                    activities[actIndex].assignedDate = null;
-                    activities[actIndex].assignedHour = null;
-                }
-                localStorage.setItem('activities', JSON.stringify(activities));
-                renderActivities();
+        function deleteAct(id) {
+            activities = activities.filter(a => a.id !== id);
+            save(); renderActivities();
+        }
+
+        function allowDrop(e) { e.preventDefault(); }
+        function drop(e) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text');
+            const act = activities.find(a => a.id === id);
+            const slot = e.currentTarget;
+
+            if (slot.classList.contains('time-slot')) {
+                act.assignedDate = slot.dataset.date;
+                act.assignedHour = slot.dataset.hour;
+            } else {
+                act.assignedDate = null;
+                act.assignedHour = null;
             }
+            save(); renderActivities();
         }
 
-        /* 💡 수정된 부분: 정상적인 구글맵스 URL 반영 완료 */
-        function openDailyRoute(targetDate) {
-            const dailyActs = activities.filter(act => act.assignedDate === targetDate);
-            if (dailyActs.length === 0) return alert('이 날짜에 배치된 일정이 없습니다. 일정을 먼저 배치해주세요!');
-            
-            dailyActs.sort((a, b) => a.assignedHour - b.assignedHour);
-            
-            const validRouteActs = dailyActs.filter(act => 
-                (act.mapName && act.mapName.trim() !== '') || 
-                (act.url && act.url.trim() !== '')
-            );
-
-            if (validRouteActs.length === 0) {
-                return alert('동선을 표시할 수 있는 장소 정보가 없습니다. (장소 이름이나 구글 지도 URL을 입력해주세요!)');
+        function save() { localStorage.setItem('activities', JSON.stringify(activities)); }
+        
+        function getDates(s, e) {
+            const arr = []; let dt = new Date(s);
+            while (dt <= new Date(e)) {
+                arr.push(new Date(dt).toISOString().split('T')[0]);
+                dt.setDate(dt.getDate() + 1);
             }
-            
-            const placeNames = validRouteActs.map(act => {
-                const nameToUse = (act.mapName && act.mapName.trim() !== '') ? act.mapName : act.title;
-                return encodeURIComponent(nameToUse);
-            });
-            
-            // 올바른 구글맵 URL 포맷 적용
-            const routeUrl = `https://www.google.com/maps/dir/${placeNames.join('/')}`;
-            window.open(routeUrl, '_blank');
+            return arr;
         }
 
-        function openExportModal() {
-            if (!tripInfo) return alert('내보낼 일정이 없습니다. 먼저 여행을 시작해주세요!');
-            document.getElementById('exportModal').style.display = 'flex';
+        function resetPlanner() {
+            if(confirm('초기화할까요?')) { localStorage.clear(); location.reload(); }
         }
+
+        function openExportModal() { document.getElementById('exportModal').style.display = 'flex'; }
         function closeExportModal() { document.getElementById('exportModal').style.display = 'none'; }
 
         function exportJson() {
-            const dataStr = JSON.stringify({ tripInfo, activities }, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
+            const blob = new Blob([JSON.stringify({tripInfo, activities})], {type:'application/json'});
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = `${tripInfo.dest}_여행일정.json`; a.click();
-            URL.revokeObjectURL(url); closeExportModal();
-        }
-
-        function importData(event) {
-            const file = event.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.tripInfo && data.activities) {
-                        localStorage.setItem('tripInfo', JSON.stringify(data.tripInfo));
-                        localStorage.setItem('activities', JSON.stringify(data.activities));
-                        alert('일정을 성공적으로 불러왔습니다!'); location.reload();
-                    } else alert('올바른 형식의 플래너 파일이 아닙니다.');
-                } catch (err) { alert('파일을 읽는 중 오류가 발생했습니다.'); }
-            };
-            reader.readAsText(file); event.target.value = '';
+            const a = document.createElement('a'); a.href = url; a.download = 'plan.json'; a.click();
         }
 
         function exportImage() {
-            closeExportModal();
-            setTimeout(() => {
-                html2canvas(document.getElementById('timetable'), { backgroundColor: "#f3f4f6", scale: 2, useCORS: true })
-                .then(canvas => {
-                    const link = document.createElement('a'); link.download = `${tripInfo.dest}_타임테이블.jpg`;
-                    link.href = canvas.toDataURL('image/jpeg', 0.9); link.click();
-                }).catch(err => alert('이미지 생성 오류'));
-            }, 300);
+            html2canvas(document.getElementById('timetable')).then(canvas => {
+                const a = document.createElement('a'); a.href = canvas.toDataURL(); a.download = 'plan.png'; a.click();
+            });
         }
 
-        function exportMarkdown() {
-            if (!tripInfo) return alert('내보낼 일정이 없습니다.');
-
-            let mdText = `# ✈️ ${tripInfo.dest} 여행 일정\n\n`;
-            mdText += `**여행 기간:** ${tripInfo.start} ~ ${tripInfo.end}\n\n`;
-            mdText += `---\n\n`;
-
-            const dates = getDates(tripInfo.start, tripInfo.end);
-            
-            dates.forEach((date, index) => {
-                mdText += `## Day ${index + 1} (${date})\n\n`;
-                
-                const dailyActs = activities.filter(act => act.assignedDate === date);
-                dailyActs.sort((a, b) => a.assignedHour - b.assignedHour);
-                
-                if (dailyActs.length === 0) {
-                    mdText += `> 배치된 일정이 없습니다.\n\n`;
-                } else {
-                    dailyActs.forEach(act => {
-                        const h = Math.floor(act.assignedHour);
-                        const m = (act.assignedHour - h) * 60;
-                        const timeStr = `${h < 10 ? '0' + h : h}:${m === 0 ? '00' : m}`;
-                        const typeStr = getTypeName(act.type); 
-                        
-                        let line = `- **[${timeStr}]** \`${typeStr}\` ${act.title}`;
-                        if (act.url) {
-                            line += ` [📍 링크](${act.url})`;
-                        }
-                        mdText += line + `\n`;
-                    });
-                    mdText += `\n`;
-                }
-            });
-
-            const unassignedActs = activities.filter(act => !act.assignedDate);
-            if (unassignedActs.length > 0) {
-                mdText += `---\n\n## 📝 미배치 대기열 (참고용)\n\n`;
-                unassignedActs.forEach(act => {
-                    const typeStr = getTypeName(act.type);
-                    let line = `- \`${typeStr}\` ${act.title}`;
-                    if (act.url) {
-                        line += ` [📍 링크](${act.url})`;
-                    }
-                    mdText += line + `\n`;
-                });
-            }
-
-            const blob = new Blob([mdText], { type: "text/markdown;charset=utf-8" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); 
-            a.href = url; 
-            a.download = `${tripInfo.dest}_여행일정.md`; 
-            a.click();
-            URL.revokeObjectURL(url); 
-            closeExportModal();
+        function importData(e) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const data = JSON.parse(ev.target.result);
+                localStorage.setItem('tripInfo', JSON.stringify(data.tripInfo));
+                localStorage.setItem('activities', JSON.stringify(data.activities));
+                location.reload();
+            };
+            reader.readAsText(e.target.files[0]);
         }
     </script>
 </body>
