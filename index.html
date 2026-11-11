@@ -79,6 +79,11 @@
         .timetable-wrapper { display: flex; gap: 20px; min-width: max-content; padding-bottom: 20px; background-color: var(--bg-body); }
         .day-column { background: var(--bg-surface); width: 280px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow: hidden; flex-shrink: 0; border: 1px solid var(--border); }
         .day-header { background: var(--bg-surface); color: var(--text-main); text-align: center; padding: 16px; font-weight: 700; font-size: 1rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 2; }
+        .day-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+        .day-date-label { margin: 0; text-align: left; }
+        .weekday-label { color: var(--primary); font-weight: 800; }
+        .route-icon-btn { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 32px; width: 32px; height: 32px; padding: 0; border: 1px solid #a7f3d0; border-radius: 8px; background: #ecfdf5; color: #047857; font-size: 1.05rem; line-height: 1; cursor: pointer; }
+        .route-icon-btn:hover { background: #d1fae5; border-color: #6ee7b7; }
         
         .time-slot { 
             height: 72px; max-height: 72px; border-bottom: 1px solid #e1e9ee; 
@@ -100,6 +105,20 @@
         .time-slot .activity-item { position: absolute; left: 60px; right: 8px; margin: 0; min-height: 28px; overflow: hidden; z-index: 10; }
         .time-slot .activity-item:hover { z-index: 20; } 
         #unassigned-list .activity-item { height: auto !important; }
+
+        /* 30분 일정은 한 줄 카드로 표시해 타이틀이 잘리지 않도록 한다. */
+        .time-slot .activity-item.compact-activity { min-height: 28px; padding: 2px 4px; display: block; }
+        .compact-activity .activity-header { height: 0; }
+        .compact-activity .activity-icons-left { display: none; }
+        .compact-activity .btn-group { position: absolute; top: 1px; right: 2px; gap: 2px; }
+        .compact-activity .icon-btn { width: 20px; height: 20px; font-size: 0.62rem; }
+        .compact-activity .activity-body { position: absolute; top: 2px; left: 6px; right: 48px; height: 20px; align-items: center; }
+        .compact-activity .activity-title { font-size: 0.78rem; line-height: 18px; }
+        .compact-activity .resizer { height: 5px; padding-bottom: 0; }
+        .compact-activity .resizer::after { width: 20px; height: 3px; }
+
+        .day-note-input { width: 100%; margin-top: 8px; padding: 7px 9px; border: 1px solid var(--border); border-radius: 6px; background: #f8fafc; color: var(--text-main); font: inherit; font-size: 0.82rem; font-weight: 400; }
+        .day-note-input:focus { outline: none; border-color: var(--primary); background: #fff; }
         
         .activity-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .activity-icons-left { display: flex; align-items: center; gap: 6px; }
@@ -294,6 +313,7 @@
     <script>
         let tripInfo = null;
         let activities = [];
+        let dayNotes = {};
         let editingActId = null; 
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -305,11 +325,12 @@
         function loadData() {
             tripInfo = JSON.parse(localStorage.getItem('tripInfo'));
             activities = JSON.parse(localStorage.getItem('activities')) || [];
+            dayNotes = JSON.parse(localStorage.getItem('dayNotes')) || {};
         }
 
         function resetPlanner() {
             if(confirm('현재 일정을 지우고 새 여행을 시작하시겠습니까? (필요하다면 먼저 내보내기를 해주세요)')) {
-                localStorage.removeItem('tripInfo'); localStorage.removeItem('activities'); location.reload();
+                localStorage.removeItem('tripInfo'); localStorage.removeItem('activities'); localStorage.removeItem('dayNotes'); location.reload();
             }
         }
 
@@ -423,6 +444,11 @@
             return dates;
         }
 
+        function getWeekday(dateString) {
+            const [year, month, day] = dateString.split('-').map(Number);
+            return ['일', '월', '화', '수', '목', '금', '토'][new Date(Date.UTC(year, month - 1, day)).getUTCDay()];
+        }
+
         function getTypeName(type) {
             const types = { 'meal': '식사 🍔', 'cafe': '카페 ☕', 'activity': '액티비티 🎢', 'transport': '이동 🚌', 'accommodation': '숙소 🛌', 'todo': '할일 📝' };
             return types[type] || '일정';
@@ -440,9 +466,26 @@
             getDates(tripInfo.start, tripInfo.end).forEach((date, index) => {
                 const dayDiv = document.createElement('div'); dayDiv.className = 'day-column';
                 dayDiv.innerHTML = `<div class="day-header">
-                    <div style="margin-bottom: 8px;">Day ${index + 1} (${date})</div>
-                    <button data-html2canvas-ignore class="primary-btn" style="padding: 6px; font-size: 0.8rem; background-color: #10b981; border-radius: 4px;" onclick="openDailyRoute('${date}')">🗺️ 이 날의 동선 보기</button>
+                    <div class="day-heading-row">
+                        <div class="day-date-label">Day ${index + 1} (${date} <span class="weekday-label">${getWeekday(date)}</span>)</div>
+                        <button type="button" data-html2canvas-ignore class="route-icon-btn" title="이 날의 동선 보기" aria-label="이 날의 동선 보기" onclick="openDailyRoute('${date}')">🗺️</button>
+                    </div>
                 </div>`;
+
+                const noteInput = document.createElement('input');
+                noteInput.type = 'text';
+                noteInput.className = 'day-note-input';
+                noteInput.maxLength = 120;
+                noteInput.placeholder = '이 날짜의 메모 (선택)';
+                noteInput.setAttribute('aria-label', `${date} 메모`);
+                noteInput.value = dayNotes[date] || '';
+                noteInput.addEventListener('input', () => {
+                    const note = noteInput.value.trim();
+                    if (note) dayNotes[date] = note;
+                    else delete dayNotes[date];
+                    localStorage.setItem('dayNotes', JSON.stringify(dayNotes));
+                });
+                dayDiv.querySelector('.day-header').appendChild(noteInput);
 
                 for (let hour = 6; hour <= 24; hour++) {
                     const slot = document.createElement('div');
@@ -483,7 +526,8 @@
 
         function createActivityElement(act) {
             const div = document.createElement('div');
-            div.className = `activity-item type-${act.type}`; div.id = act.id; div.draggable = true; div.ondragstart = drag;
+            const isCompact = (act.height || 64) <= 32;
+            div.className = `activity-item type-${act.type}${isCompact ? ' compact-activity' : ''}`; div.id = act.id; div.draggable = true; div.ondragstart = drag;
 
             let html = `
                 <div class="activity-header">
@@ -627,7 +671,7 @@
             const dailyActs = activities.filter(act => act.assignedDate === targetDate);
             if (dailyActs.length === 0) return alert('이 날짜에 배치된 일정이 없습니다. 일정을 먼저 배치해주세요!');
             
-            dailyActs.sort((a, b) => a.assignedHour - b.assignedHour);
+            dailyActs.sort((a, b) => (Number(a.assignedHour) || 0) - (Number(b.assignedHour) || 0));
             
             const validRouteActs = dailyActs.filter(act => 
                 (act.mapName && act.mapName.trim() !== '') || 
@@ -638,13 +682,68 @@
                 return alert('동선을 표시할 수 있는 장소 정보가 없습니다. (장소 이름이나 구글 지도 URL을 입력해주세요!)');
             }
             
-            const placeNames = validRouteActs.map(act => {
-                const nameToUse = (act.mapName && act.mapName.trim() !== '') ? act.mapName : act.title;
-                return encodeURIComponent(nameToUse);
-            });
-            
-            const routeUrl = `https://www.google.com/maps/dir/${placeNames.join('/')}`;
-            window.open(routeUrl, '_blank');
+            const places = validRouteActs.map(act => ({
+                label: (act.mapName && act.mapName.trim()) || act.title,
+                query: getGoogleMapsPlaceQuery(act)
+            }));
+
+            if (places.length === 1) {
+                const searchUrl = new URL('https://www.google.com/maps/search/');
+                searchUrl.searchParams.set('api', '1');
+                searchUrl.searchParams.set('query', places[0].query);
+                window.open(searchUrl.toString(), '_blank', 'noopener');
+                return;
+            }
+
+            const maxStops = 11; // origin + up to 9 waypoints + destination on desktop
+            const routePlaces = places.slice(0, maxStops);
+            const directionsUrl = new URL('https://www.google.com/maps/dir/');
+            directionsUrl.searchParams.set('api', '1');
+            directionsUrl.searchParams.set('origin', routePlaces[0].query);
+            directionsUrl.searchParams.set('destination', routePlaces[routePlaces.length - 1].query);
+            if (routePlaces.length > 2) {
+                directionsUrl.searchParams.set('waypoints', routePlaces.slice(1, -1).map(place => place.query).join('|'));
+            }
+            window.open(directionsUrl.toString(), '_blank', 'noopener');
+
+            if (places.length > maxStops) {
+                alert(`Google Maps URL은 경유지를 최대 9개까지 지원하여, 시간순 앞의 ${maxStops}개 장소만 동선에 표시했습니다.`);
+            }
+        }
+
+        function getGoogleMapsPlaceQuery(act) {
+            const rawUrl = (act.url || '').trim();
+            const fallback = (act.mapName && act.mapName.trim()) || act.title;
+            if (!rawUrl) return fallback;
+
+            try {
+                const mapUrl = new URL(rawUrl);
+                const host = mapUrl.hostname.toLowerCase();
+                const isGoogleMapsUrl = host === 'maps.app.goo.gl' || host === 'goo.gl' || host === 'google.com' || host.endsWith('.google.com') || host === 'google.co.kr' || host.endsWith('.google.co.kr');
+                if (!isGoogleMapsUrl) return fallback;
+
+                // Prefer coordinates attached to a specific place marker over the map's viewport center.
+                const markerCoordinates = rawUrl.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+                if (markerCoordinates) return `${markerCoordinates[1]},${markerCoordinates[2]}`;
+
+                for (const key of ['query', 'q', 'destination', 'daddr']) {
+                    const value = mapUrl.searchParams.get(key);
+                    if (value && value.trim()) return value.trim();
+                }
+
+                const placeMatch = mapUrl.pathname.match(/\/place\/([^/]+)/i);
+                if (placeMatch) {
+                    const place = decodeURIComponent(placeMatch[1]).replace(/\+/g, ' ').replace(/,/g, ' ').trim();
+                    if (place && !/^data=/i.test(place)) return place;
+                }
+
+                const coordinates = rawUrl.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+                if (coordinates) return `${coordinates[1]},${coordinates[2]}`;
+            } catch (error) {
+                // Invalid or short-link URLs fall back to the place name entered by the user.
+            }
+
+            return fallback;
         }
 
         function openExportModal() {
@@ -654,7 +753,7 @@
         function closeExportModal() { document.getElementById('exportModal').style.display = 'none'; }
 
         function exportJson() {
-            const dataStr = JSON.stringify({ tripInfo, activities }, null, 2);
+            const dataStr = JSON.stringify({ tripInfo, activities, dayNotes }, null, 2);
             const blob = new Blob([dataStr], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = `${tripInfo.dest}_여행일정.json`; a.click();
@@ -670,6 +769,7 @@
                     if (data.tripInfo && data.activities) {
                         localStorage.setItem('tripInfo', JSON.stringify(data.tripInfo));
                         localStorage.setItem('activities', JSON.stringify(data.activities));
+                        localStorage.setItem('dayNotes', JSON.stringify(data.dayNotes || {}));
                         alert('일정을 성공적으로 불러왔습니다!'); location.reload();
                     } else alert('올바른 형식의 플래너 파일이 아닙니다.');
                 } catch (err) { alert('파일을 읽는 중 오류가 발생했습니다.'); }
@@ -698,7 +798,8 @@
             const dates = getDates(tripInfo.start, tripInfo.end);
             
             dates.forEach((date, index) => {
-                mdText += `## Day ${index + 1} (${date})\n\n`;
+                mdText += `## Day ${index + 1} (${date}, ${getWeekday(date)})\n\n`;
+                if (dayNotes[date]) mdText += `**메모:** ${dayNotes[date]}\n\n`;
                 
                 const dailyActs = activities.filter(act => act.assignedDate === date);
                 dailyActs.sort((a, b) => a.assignedHour - b.assignedHour);
